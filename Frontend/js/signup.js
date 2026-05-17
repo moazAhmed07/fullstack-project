@@ -88,6 +88,46 @@
             errorMsg.classList.toggle('show', hasError);
 
             if (!hasError) {
-                alert(`✅ Welcome to Football Cave, ${firstName.value}!`);
+                const name = `${firstName.value} ${lastName.value}`.trim();
+                const userData = {
+                    name,
+                    email: email.value,
+                    password: password.value
+                };
+
+                // Disable submit button during request (optional but good practice)
+                const submitBtn = document.querySelector('.btn-signup');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'CREATING...';
+                submitBtn.disabled = true;
+
+                fetch('http://localhost:5000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    if (data.success) {
+                        alert(`✅ Welcome to Football Cave, ${firstName.value}!`);
+                        localStorage.setItem('token', data.data.token);
+                        window.location.href = 'login.html'; // Redirect to login
+                    } else {
+                        errorMsg.textContent = '⚠ ' + (data.message || 'Registration failed');
+                        errorMsg.classList.add('show');
+                    }
+                })
+                .catch(error => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    errorMsg.textContent = '⚠ Network error, please ensure the backend is running.';
+                    errorMsg.classList.add('show');
+                    console.error('Error:', error);
+                });
             }
         });
