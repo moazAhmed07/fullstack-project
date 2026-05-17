@@ -23,8 +23,17 @@ const app = express();
 // Body parser
 app.use(express.json());
 
-// Enable CORS
-app.use(cors());
+// Enable CORS for production (GitHub Pages) and local dev
+const corsOptions = {
+  origin: [
+    'https://moazahmed07.github.io', 
+    'http://127.0.0.1:5500', 
+    'http://localhost:5500',
+    'http://localhost:3000'
+  ],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // Mount routers
 app.use('/api/auth', authRoutes);
