@@ -26,8 +26,8 @@
                 submitBtn.textContent = 'LOGGING IN...';
                 submitBtn.disabled = true;
 
-                // Replit Backend URL
-                const API_BASE_URL = 'https://fullstack-project--moaz2422007.replit.app';
+                // Local Backend URL
+                const API_BASE_URL = 'http://localhost:5000';
 
                 fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
